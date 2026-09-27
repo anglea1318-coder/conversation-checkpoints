@@ -1,6 +1,6 @@
 # Claude Code `-p` 应用架构：PWA、网关、记忆与 Checkpoint
 
-早期版本通过 Anthropic Python SDK 直接调用 Messages API。应用需要自行组装每次请求的历史、处理模型输出，并完成工具调用后的续轮。当前版本在 VPS 上接入 Claude Code `-p`：服务按窗口管理运行进程，使用 `--resume` 延续会话，并接收结构化的输出与工具事件。
+早期版本通过 Anthropic Python SDK 调用 Messages API，由应用将 system prompt、角色设定、工具定义和历史组装为每轮请求。随着项目历史增长，整轮输入可能达到十万 token 量级。迁移到 VPS 上的 Claude Code `-p` 后，system prompt、启动上下文与 MCP 工具分别管理；服务按窗口维护会话，并通过 `--resume` 延续长项目的上下文。
 
 ```text
 PWA 提交请求
